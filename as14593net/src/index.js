@@ -94,7 +94,25 @@ export default {
     }
 
     let html_content = "";
-    let html_style = "body{padding:6em; font-family: sans-serif;} h1{color:#f6821f;}";
+    let html_style = `
+      body {
+            padding: 6em;
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            color: #f6821f;
+        }
+        .content {
+            flex: 1;
+        }
+        footer {
+            text-align: center; /* Center the footer content */
+        }
+    `;
 
     html_content += "<p> Information about your connection </p>";
     html_content += "<p> IP address: " + request.headers.get("CF-Connecting-IP") + "</p>";
@@ -118,15 +136,22 @@ export default {
     html_content += "<p> Region Code: " + request.cf.regionCode + "</p>";
     html_content += "<p> Timezone: " + request.cf.timezone + "</p>";
 
+    let footer = "<p> This website runs on Cloudflare Workers. <br>Source code available at <a href='https://github.com/clarkzjw/as14593.net' target='_blank'>GitHub</a>. </p>";
+
     let html = `<!DOCTYPE html>
-        <head>
-          <title> Geolocation: Hello World </title>
-          <style> ${html_style} </style>
-        </head>
-        <body>
-          <h1>Starlink Point of Presence (PoP) Geolocation</h1>
-          ${html_content}
-        </body>`;
+    <html lang="en">
+    <head>
+        <title>Geolocation: Hello World</title>
+        <style>${html_style}</style>
+    </head>
+    <body>
+        <div class="content">
+            <h1>Starlink Point of Presence (PoP) Geolocation</h1>
+            ${html_content}
+        </div>
+        ${footer}
+    </body>
+    </html>`;
 
     return new Response(html, {
       headers: {
