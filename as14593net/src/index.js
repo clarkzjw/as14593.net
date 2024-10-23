@@ -74,7 +74,6 @@ export default {
     var isStarlink = false;
     var pop = "";
     var ptr = "";
-    var isStarlink = false;
 
     geoip = geoip["valid"];
     for (var country in geoip) {
@@ -95,12 +94,11 @@ export default {
 
     let html_content = "";
     let html_style = `
-      body {
+        body {
             padding: 6em;
             font-family: sans-serif;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
             margin: 0;
         }
         h1 {
@@ -109,49 +107,56 @@ export default {
         .content {
             flex: 1;
         }
-        footer {
-            text-align: center; /* Center the footer content */
+        .footer {
+            text-align: left;
+            font-style: italic;
+            font-size: 0.8em;
         }
-    `;
+`;
 
     html_content += "<p> Information about your connection </p>";
     html_content += "<p> IP address: " + request.headers.get("CF-Connecting-IP") + "</p>";
     if (isStarlink) {
-      html_content += "<p> You are probably associated with Starlink PoP: " + pop + "</p>";
-      html_content += "<p> Your hostname: " + ptr + "</p>";
+      html_content += "<p> You are probably associated with the Starlink PoP: " + pop + "</p>";
+      html_content += "<p> Your hostname seems to be: " + ptr + "</p>";
     } else {
       html_content += "<p> You are probably not using Starlink </p>";
     }
 
     html_content += "<p> ASN: " + request.cf.asn + "</p>";
-    html_content += "<p> ASN Organization: " + request.cf.asOrganization + "</p>";
+    html_content += "<p> ASN organization: " + request.cf.asOrganization + "</p>";
 
-    html_content += "<p> HTTP Protocol: " + request.cf.httpProtocol + "</p>";
+    html_content += "<p> HTTP protocol: " + request.cf.httpProtocol + "</p>";
 
     html_content += "<hr><p> Information about your location (by Cloudflare) </p>";
     html_content += "<p> Continent: " + request.cf.continent + "</p>";
     html_content += "<p> Country: " + request.cf.country + "</p>";
     html_content += "<p> City: " + request.cf.city + "</p>";
     html_content += "<p> Region: " + request.cf.region + "</p>";
-    html_content += "<p> Region Code: " + request.cf.regionCode + "</p>";
+    html_content += "<p> Region code: " + request.cf.regionCode + "</p>";
     html_content += "<p> Timezone: " + request.cf.timezone + "</p>";
 
-    let footer = "<p> This website runs on Cloudflare Workers. <br>Source code available at <a href='https://github.com/clarkzjw/as14593.net' target='_blank'>GitHub</a>. </p>";
+    let footer = "<p>Powered by Cloudflare Workers. <br>This website is not affiliated with, endorsed by, or in any way connected to Starlink, SpaceX Inc., or any of their subsidiaries.<br>The information on this website is provided as-is and is not guaranteed to be accurate.<br>Source code available at <a href='https://github.com/clarkzjw/as14593.net' target='_blank'>GitHub</a>. </p>";
 
-    let html = `<!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <title>Geolocation: Hello World</title>
-        <style>${html_style}</style>
-    </head>
-    <body>
-        <div class="content">
-            <h1>Starlink Point of Presence (PoP) Geolocation</h1>
-            ${html_content}
-        </div>
-        ${footer}
-    </body>
-    </html>`;
+    let html = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Starlink IP Geolocation & Point of Presence (PoP)</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <style>${html_style}</style>
+</head>
+<body>
+    <div class="content">
+        <h1>Starlink IP Geolocation & Point of Presence (PoP)</h1>
+        ${html_content}
+    </div>
+    <div class="footer">
+    ${footer}
+    <div>
+</body>
+</html>`;
 
     return new Response(html, {
       headers: {
