@@ -144,7 +144,6 @@ export default {
 <head>
     <meta charset="utf-8">
     <title>Starlink IP Geolocation & Point of Presence (PoP)</title>
-    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
     <style>${html_style}</style>
 </head>
 <body>
